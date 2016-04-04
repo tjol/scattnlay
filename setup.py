@@ -57,6 +57,7 @@ O. Pena, U. Pal, Comput. Phys. Commun. 180 (2009) 2348-2354.""",
       ext_modules =  cythonize([Extension("scattnlay",
                                ["src/nmie.cc", "src/py_nmie.cc", "src/scattnlay.pyx"],
                                language = "c++",
+                               extra_compile_args = ['-std=c++11'],
                                include_dirs = [np.get_include()])])
 )
 
