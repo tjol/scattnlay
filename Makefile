@@ -8,28 +8,19 @@ SRCDIR=$(CURDIR)/src
 
 all:
 	@echo "make source - Create source package for Python extension"
-	@echo "make cython - Convert Cython code to C++"
-	@echo "make python_ext - Create Python extension using C++ code"
-	@echo "make cython_ext - Create Python extension using Cython code"
+	@echo "make python_ext - Create Python extension"
 	@echo "make install - Install Python extension on local system"
 	@echo "make buildrpm - Generate a rpm package for Python extension"
 	@echo "make builddeb - Generate a deb package for Python extension"
 	@echo "make standalone - Create standalone programs (scattnlay and fieldnlay)"
-	@echo "make clean - Delete temporal files"
+	@echo "make clean - Delete temporary files"
 #	make standalone
 
 source:
 	$(PYTHON) setup.py sdist $(COMPILE) --dist-dir=../
 
-cython: scattnlay.pyx
-	$(CYTHON) --cplus scattnlay.pyx
-	mv scattnlay.cpp $(SRCDIR)/
-
-python_ext: $(SRCDIR)/nmie.cc $(SRCDIR)/py_nmie.cc $(SRCDIR)/scattnlay.cpp
-	export CFLAGS='-std=c++11' && $(PYTHON) setup.py build_ext --inplace
-
-cython_ext: $(SRCDIR)/nmie.cc $(SRCDIR)/py_nmie.cc scattnlay.pyx
-	export CFLAGS='-std=c++11' && $(PYTHON) setup.py build_ext --inplace
+python_ext: $(SRCDIR)/nmie.cc $(SRCDIR)/py_nmie.cc $(SRCDIR)/scattnlay.pyx
+	$(PYTHON) setup.py build_ext --inplace
 
 install:
 	$(PYTHON) setup.py install --root $(DESTDIR) $(COMPILE)

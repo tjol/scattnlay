@@ -4,7 +4,7 @@
 #    Copyright (C) 2009-2015 Ovidio Peña Rodríguez <ovidio@bytesfall.com>
 #    Copyright (C) 2013-2015 Konstantin Ladutenko <kostyfisik@gmail.com>
 #
-#    This file is part of python-scattnlay
+#    This file is part of scattnlay
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ __url__ = 'http://scattering.sourceforge.net/'
 
 from distutils.core import setup
 from distutils.extension import Extension
+from Cython.Build import cythonize
 import numpy as np
 
 setup(name = __mod__,
@@ -53,10 +54,11 @@ O. Pena, U. Pal, Comput. Phys. Commun. 180 (2009) 2348-2354.""",
       url = __url__,
       license = 'GPL',
       platforms = 'any',
-      ext_modules = [Extension("scattnlay",
-                               ["src/nmie.cc", "src/py_nmie.cc", "src/scattnlay.cpp"],
-                               language = "c++",
-                               include_dirs = [np.get_include()], 
-                               extra_compile_args=['-std=c++11'])]
+      ext_modules = cythonize("src/scattnlay.pyx",                                                    # our Cython source
+                              sources = ["src/nmie.cc", "src/py_nmie.cc"],   # additional source file(s)
+                              language = "c++",                                                   # generate C++ code
+                              extra_compile_args = ['-std=c++11'],
+                              include_dirs = [np.get_include()]
+      )
 )
 
